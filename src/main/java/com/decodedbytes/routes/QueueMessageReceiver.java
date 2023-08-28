@@ -10,6 +10,7 @@ public class QueueMessageReceiver extends RouteBuilder {
     public void configure() throws Exception {
 
         from("activemq:queue:nameaddressqueue")
+                .routeId("activeMQSubscriberId")
                 .log(LoggingLevel.INFO, ">>>>>>>>>>> Received Queue Message: ${body}");
     }
 }
