@@ -12,12 +12,11 @@ import org.springframework.stereotype.Component;
 public class BatchMessageProcessingRoute extends RouteBuilder {
     @Override
     public void configure() throws Exception {
-        RoutePolicy depententRoutePolicy = new DependentRoutePolicy("batchMessageRouteId", "activeMQSubscriberId");
+        RoutePolicy dependentRoutePolicy = new DependentRoutePolicy("batchMessageRouteId", "activeMQSubscriberId");
 
         from("timer:batch?period=60000")
                 .routeId("batchMessageRouteId")
-                .autoStartup(false)
-                .routePolicy()
+                .routePolicy(dependentRoutePolicy)
                 .to("jpa:"+ InboundNameAddress.class.getName()+"?namedQuery=fetchAllRows")
                 .split(body())
                 .log(LoggingLevel.INFO, "Read Row: ${body}")
@@ -27,9 +26,17 @@ public class BatchMessageProcessingRoute extends RouteBuilder {
                 .toD("jpa:"+InboundNameAddress.class.getName()+"?nativeQuery=DELETE FROM NAME_ADDRESS where id = ${header.consumedId}&useExecuteUpdate=true")
                 .end();
 
-        from("timer:startBatchRoute?repeatCount=1")
+        from("timer:startBatchRoute?repeatCount=1&delay=5000")
+                .routeId("batchStopRouteId")
+                .to("controlbus:route?routeid=batchMessageRouteId&action=stop")
+                .to("controlbus:route?routeid=batchMessageRouteId&action=status")
+                .to("controlbus:route?routeid=activeMQSubscriberId&action=status");
+
+        from("timer:startBatchRoute?repeatCount=1&delay=15000")
                 .routeId("batchStartRouteId")
-                .to("controlbus:route?routeid=batchMessageRouteId&action=start");
+                .to("controlbus:route?routeid=activeMQSubscriberId&action=stop")
+                .to("controlbus:route?routeid=batchMessageRouteId&action=status")
+                .to("controlbus:route?routeid=activeMQSubscriberId&action=status");
 
     }
 }

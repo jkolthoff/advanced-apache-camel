@@ -12,25 +12,28 @@ public class DependentRoutePolicy extends RoutePolicySupport {
         this.routeName2 = routeName2;
     }
 
-    @Override
-    public void onStart(Route route){
-        CamelContext camelContext = route.getCamelContext();
-
-        try {
-            camelContext.getRouteController().startRoute(routeName1);
-            camelContext.getRouteController().startRoute(routeName2);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
+    //@Override
+    //public void onStart(Route route){
+    //    CamelContext camelContext = route.getCamelContext();
+    //
+    //    try {
+    //        camelContext.getRouteController().startRoute(routeName1);
+    //        camelContext.getRouteController().startRoute(routeName2);
+    //    } catch (Exception e){
+    //        e.printStackTrace();
+    //    }
+    //}
 
     @Override
     public void onStop(Route route){
         CamelContext camelContext = route.getCamelContext();
 
+        String routeToStart = route.getRouteId().equals(routeName1) ? routeName2 : routeName1;
+        String routeToStop = route.getRouteId().equals(routeName1) ? routeName1 : routeName2;
+
         try {
-            camelContext.getRouteController().stopRoute(routeName1);
-            camelContext.getRouteController().stopRoute(routeName2);
+            camelContext.getRouteController().stopRoute(routeToStop);
+            camelContext.getRouteController().startRoute(routeToStart);
         } catch (Exception e){
             e.printStackTrace();
         }
