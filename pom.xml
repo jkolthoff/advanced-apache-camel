@@ -110,6 +110,11 @@
 			<version>1.18.22</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.drools</groupId>
+			<artifactId>drools-decisiontables</artifactId>
+			<version>7.66.0.Final</version>
+		</dependency>
 	</dependencies>
 
 	<build>
