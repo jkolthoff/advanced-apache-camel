@@ -8,8 +8,9 @@
         <properties>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
             <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/camel_masterclass?createDatabaseIfNotExist=true" />
-            <property name="javax.persistence.jdbc.user" value="root" />
-            <property name="javax.persistence.jdbc.password" value="password" />
+            <property name="javax.persistence.jdbc.user" value="camel" />
+            <property name="javax.persistence.jdbc.password" value="c4m3l" />
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
         </properties>
 
     </persistence-unit>
