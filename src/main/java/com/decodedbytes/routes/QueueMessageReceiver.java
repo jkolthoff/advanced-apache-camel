@@ -15,7 +15,7 @@ public class QueueMessageReceiver extends RouteBuilder {
 
         from("activemq:queue:nameaddressqueue")
                 .routeId("activeMQSubscriberId")
-                .routePolicy(dependentRoutePolicy)
+                //.routePolicy(dependentRoutePolicy)
                 .log(LoggingLevel.INFO, ">>>>>>>>>>> Received Queue Message: ${body}");
     }
 }
